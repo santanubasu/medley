@@ -76,7 +76,7 @@ function _splice(source, target, options) {
         }
         else if (isArray(target)) {
             var operationMode = getOperationMode(undefined, "array", options);
-            return target;
+            return (operationMode===splice.merge)?target:options.deletionToken;
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode(undefined, "object", options);
