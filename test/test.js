@@ -552,12 +552,13 @@ describe("Basic tests,", function() {
             var result = splice.merge(a).into(b);
             result===undefined?done():done(new Error());
         });
-        it("should merge 1 into undefined, returning 1", function(done) {
+        it("should remove 1 from undefined, returning undefined", function(done) {
             var a = 1;
             var b;
-            var result = splice.merge(a).into(b);
-            result===1?done():done(new Error());
+            var result = splice.remove(a).from(b);
+            (result===null)?done():done(new Error());
         });
+        /*
         it("should merge array into undefined, returning array", function(done) {
             var a = [1, 2];
             var b;
@@ -760,5 +761,6 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
+        */
     });
 })

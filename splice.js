@@ -188,9 +188,6 @@ function _splice(source, target, options) {
             }
             else {
                 for (var key in source) {
-                    if (key===options.identityKey) {
-                        continue;
-                    }
                     if (key in target) {
                         target[key] = _splice(source[key], target[key], options);
                     }
