@@ -130,6 +130,20 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
+        it("should append array into array, returning array", function(done) {
+            var a = [1, 2];
+            var b = [1, 3, 3];
+            var result = splice({append:true}).merge(a).into(b);
+            try {
+                assert.notStrictEqual(result, a);
+                assert.strictEqual(result, b);
+                assert.deepEqual(result, [1, 3, 3, 1, 2]);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
         it("should merge object into array, returning object", function(done) {
             var a = {
                 p1:1,
@@ -549,7 +563,7 @@ describe("Basic tests,", function() {
         it("should remove undefined from undefined, returning undefined", function(done) {
             var a;
             var b;
-            var result = splice.merge(a).into(b);
+            var result = splice.remove(a).from(b);
             result===undefined?done():done(new Error());
         });
         it("should remove 1 from undefined, returning undefined", function(done) {

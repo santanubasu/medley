@@ -113,9 +113,9 @@ function _splice(source, target, options) {
             }
             var newElements = [];
             for (var i=0; i<source.length; i++) {
-                var id = source[i]?source[i][options.identityKey]:i;
-                if (!id) {
-                    id = i;
+                var id = source[i]?source[i][options.identityKey]:undefined;
+                if (!id||options.append) {
+                    id = options.append?(i+target.length):i;
                 }
                 if (id in targetIndexMap) {
                     var targetIndex = targetIndexMap[id];
@@ -280,6 +280,7 @@ var splice = function(options) {
                         options,
                         {
                             identityKey:"id",
+                            append:false,
                             operationMode:splice.remove,
                             deletionToken:null,
                             deleteEmptyObjects:false
