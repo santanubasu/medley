@@ -261,6 +261,7 @@ var splice = function(options) {
                         options,
                         {
                             identityKey:"id",
+                            append:false,
                             operationMode:splice.merge,
                             deletionToken:null,
                             deleteEmptyObjects:false
