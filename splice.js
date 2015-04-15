@@ -42,7 +42,7 @@ function getOperationMode(sourceType, targetType, options) {
                 options.operationMode[sourceType][targetType]:
                 options.operationMode[sourceType]):
             options.operationMode):
-        splice.merge;
+        splice.operationModes.merge;
 }
 
 function isIdentityObject(object, options) {
@@ -76,11 +76,11 @@ function _splice(source, target, options) {
         }
         else if (isArray(target)) {
             var operationMode = getOperationMode(undefined, "array", options);
-            return (operationMode===splice.merge)?target:options.deletionToken;
+            return (operationMode===splice.operationModes.merge)?target:options.deletionToken;
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode(undefined, "object", options);
-            return (operationMode===splice.merge)?filterEmptyObject(target, options):options.deletionToken;
+            return (operationMode===splice.operationModes.merge)?filterEmptyObject(target, options):options.deletionToken;
         }
         else {
             var operationMode = getOperationMode(undefined, "value", options);
@@ -90,7 +90,7 @@ function _splice(source, target, options) {
     else if (isArray(source)) {
         if (isUndefined(target)) {
             var operationMode = getOperationMode("array", undefined, options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = source.map(function(value) {
                     return _splice(value, {}, options)
                 })
@@ -125,7 +125,7 @@ function _splice(source, target, options) {
                     newElements.push(_splice(source[i], {}, options))
                 }
             }
-            if (operationMode===splice.merge) {
+            if (operationMode===splice.operationModes.merge) {
                 target.push.apply(target, newElements);
             }
             target = filterArray(target, options.deletionToken);
@@ -133,7 +133,7 @@ function _splice(source, target, options) {
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode("array", "object", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = source.map(function(value) {
                     return _splice(value, {}, options)
                 })
@@ -146,7 +146,7 @@ function _splice(source, target, options) {
         }
         else {
             var operationMode = getOperationMode("array", "value", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = source.map(function(value) {
                     return _splice(value, {}, options)
                 })
@@ -154,14 +154,14 @@ function _splice(source, target, options) {
                 return sourceClone;
             }
             else {
-                return options.deletionToken;
+                return target;
             }
         }
     }
     else if (isObject(source)) {
         if (isUndefined(target)) {
             var operationMode = getOperationMode("object", undefined, options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = _splice(source, {}, options);
                 sourceClone = filterObject(sourceClone, options.deletionToken);
                 return filterEmptyObject(sourceClone, options);
@@ -172,7 +172,7 @@ function _splice(source, target, options) {
         }
         else if (isArray(target)) {
             var operationMode = getOperationMode("object", "array", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = _splice(source, {}, options);
                 sourceClone = filterObject(sourceClone, options.deletionToken);
                 return filterEmptyObject(sourceClone, options);
@@ -183,7 +183,7 @@ function _splice(source, target, options) {
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode("object", "object", options);
-            if (operationMode===splice.remove&&isIdentityObject(source, options)) {
+            if (operationMode===splice.operationModes.remove&&isIdentityObject(source, options)) {
                 return options.deletionToken;
             }
             else {
@@ -201,21 +201,20 @@ function _splice(source, target, options) {
         }
         else {
             var operationMode = getOperationMode("object", "value", options);
-            var operationMode = getOperationMode("object", undefined, options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 var sourceClone = _splice(source, {}, options);
                 sourceClone = filterObject(sourceClone, options.deletionToken);
                 return filterEmptyObject(sourceClone, options);
             }
             else {
-                return options.deletionToken;
+                return target;
             }
         }
     }
     else {
         if (isUndefined(target)) {
             var operationMode = getOperationMode("value", undefined, options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 return source;
             }
             else {
@@ -224,7 +223,7 @@ function _splice(source, target, options) {
         }
         else if (isArray(target)) {
             var operationMode = getOperationMode("value", "array", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 return source;
             }
             else {
@@ -233,7 +232,7 @@ function _splice(source, target, options) {
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode("value", "object", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 return source;
             }
             else {
@@ -242,11 +241,11 @@ function _splice(source, target, options) {
         }
         else {
             var operationMode = getOperationMode("value", "value", options);
-            if (operationMode==splice.merge) {
+            if (operationMode==splice.operationModes.merge) {
                 return source;
             }
             else {
-                return options.deletionToken;
+                return target;
             }
         }
     }
@@ -254,7 +253,8 @@ function _splice(source, target, options) {
 
 var splice = function(options) {
     return {
-        merge:function(source) {
+        merge:function() {
+            var args = Array.prototype.slice.call(arguments);
             return {
                 into:function(target) {
                     options = _splice(
@@ -262,19 +262,24 @@ var splice = function(options) {
                         {
                             identityKey:"id",
                             append:false,
-                            operationMode:splice.merge,
+                            operationMode:splice.operationModes.merge,
                             deletionToken:null,
                             deleteEmptyObjects:false
                         },
                         {
-                            operationMode:splice.merge
+                            operationMode:splice.operationModes.merge
                         }
                     );
-                    return _splice(source, target, options);
+                    var retVal;
+                    args.forEach(function(source) {
+                        retVal = _splice(source, target, options);
+                    })
+                    return retVal;
                 }
             }
         },
-        remove:function(source) {
+        remove:function() {
+            var args = Array.prototype.slice.call(arguments);
             return {
                 from:function(target) {
                     options = _splice(
@@ -282,23 +287,29 @@ var splice = function(options) {
                         {
                             identityKey:"id",
                             append:false,
-                            operationMode:splice.remove,
+                            operationMode:splice.operationModes.remove,
                             deletionToken:null,
                             deleteEmptyObjects:false
                         },
                         {
-                            operationMode:splice.merge
+                            operationMode:splice.operationModes.merge
                         }
                     );
-                    return _splice(source, target, options);
+                    var retVal;
+                    args.forEach(function(source) {
+                        retVal = _splice(source, target, options);
+                    })
+                    return retVal;
                 }
             }
         }
     }
 }
 
-splice.merge = "merge";
-splice.remove = "remove";
+splice.operationModes = {
+    merge:"merge",
+    remove:"remove"
+}
 splice.merge = splice({}).merge;
 splice.remove = splice({}).remove;
 
