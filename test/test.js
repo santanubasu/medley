@@ -545,6 +545,61 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
+        it("should merge object with deep array into object with deep array, returning object with deep arrays appended", function(done) {
+            var a = {
+                p1:1,
+                p2:3,
+                a1:[
+                    {
+                        id:1,
+                        a1:[
+                            {
+                                p1:1
+                            }
+                        ]
+                    }
+                ]
+            };
+            var b = {
+                p1:1,
+                p2:3,
+                a1:[
+                    {
+                        id:1,
+                        a1:[
+                            {
+                                p1:1
+                            }
+                        ]
+                    }
+                ]
+            };
+            var result = splice({append:true}).merge(a).into(b);
+            try {
+                assert.strictEqual(result, b);
+                assert.deepEqual(result, {
+                    p1:1,
+                    p2:3,
+                    a1:[
+                        {
+                            id:1,
+                            a1:[
+                                {
+                                    p1:1
+                                },
+                                {
+                                    p1:1
+                                }
+                            ]
+                        }
+                    ]
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
     });
 
 
