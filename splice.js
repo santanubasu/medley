@@ -72,24 +72,24 @@ function filterEmptyObject(object, options) {
 function _splice(source, target, options) {
     if (isUndefined(source)) {
         if (isUndefined(target)) {
-            return target;
+            var operationMode = getOperationMode("value", "value", options);
+            return (operationMode===splice.operationModes.merge)?source:options.deletionToken;
         }
         else if (isArray(target)) {
-            var operationMode = getOperationMode(undefined, "array", options);
-            return (operationMode===splice.operationModes.merge)?target:options.deletionToken;
+            return _splice([source], target, options);
         }
         else if (isObject(target)) {
-            var operationMode = getOperationMode(undefined, "object", options);
-            return (operationMode===splice.operationModes.merge)?filterEmptyObject(target, options):options.deletionToken;
+            var operationMode = getOperationMode("value", "object", options);
+            return (operationMode===splice.operationModes.merge)?source:options.deletionToken;
         }
         else {
-            var operationMode = getOperationMode(undefined, "value", options);
-            return target;
+            var operationMode = getOperationMode("value", "value", options);
+            return (operationMode===splice.operationModes.merge)?source:options.deletionToken;
         }
     }
     else if (isArray(source)) {
         if (isUndefined(target)) {
-            var operationMode = getOperationMode("array", undefined, options);
+            var operationMode = getOperationMode("array", "value", options);
             if (operationMode==splice.operationModes.merge) {
                 var sourceClone = source.map(function(value) {
                     return _splice(value, {}, options)
@@ -160,7 +160,7 @@ function _splice(source, target, options) {
     }
     else if (isObject(source)) {
         if (isUndefined(target)) {
-            var operationMode = getOperationMode("object", undefined, options);
+            var operationMode = getOperationMode("object", "value", options);
             if (operationMode==splice.operationModes.merge) {
                 var sourceClone = _splice(source, {}, options);
                 sourceClone = filterObject(sourceClone, options.deletionToken);
@@ -213,7 +213,7 @@ function _splice(source, target, options) {
     }
     else {
         if (isUndefined(target)) {
-            var operationMode = getOperationMode("value", undefined, options);
+            var operationMode = getOperationMode("value", "value", options);
             if (operationMode==splice.operationModes.merge) {
                 return source;
             }
@@ -245,7 +245,7 @@ function _splice(source, target, options) {
                 return source;
             }
             else {
-                return target;
+                return options.deletionToken;
             }
         }
     }
@@ -263,7 +263,7 @@ var splice = function(options) {
                             identityKey:"id",
                             append:false,
                             operationMode:splice.operationModes.merge,
-                            deletionToken:null,
+                            deletionToken:splice.defaultDeletionToken,
                             deleteEmptyObjects:false
                         },
                         {
@@ -288,7 +288,7 @@ var splice = function(options) {
                             identityKey:"id",
                             append:false,
                             operationMode:splice.operationModes.remove,
-                            deletionToken:null,
+                            deletionToken:splice.defaultDeletionToken,
                             deleteEmptyObjects:false
                         },
                         {
@@ -310,6 +310,7 @@ splice.operationModes = {
     merge:"merge",
     remove:"remove"
 }
+splice.defaultDeletionToken = null;
 splice.merge = splice({}).merge;
 splice.remove = splice({}).remove;
 
