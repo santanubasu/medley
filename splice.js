@@ -57,6 +57,41 @@ function isIdentityObject(object, options) {
     return count===1&&identityPresent;
 }
 
+function getArraySpliceIdentity(value, options, index) {
+    var identity;
+    var type = typeof value;
+    if (type==="undefined") {
+        return index;
+    }
+    if (options.identityKey) {
+        identity = value[options.identityKey];
+    }
+    if (identity) {
+        return identity;
+    }
+    else if (options.identityFn) {
+        identity = options.identityFn(value, index);
+    }
+    if (identity) {
+        return identity;
+    }
+    else if (type==="number"||type==="string"||type==="boolean") {
+        if (options.operationMode===splice.operationModes.merge) {
+            identity = index;
+        }
+        else {
+            identity = value;
+        }
+    }
+    if (identity) {
+        return identity;
+    }
+    else {
+        identity = index;
+    }
+    return identity;
+}
+
 function isEmptyObject(object) {
     var count = 0;
     for (var key in object) {
@@ -76,7 +111,8 @@ function _splice(source, target, options) {
             return (operationMode===splice.operationModes.merge)?source:options.deletionToken;
         }
         else if (isArray(target)) {
-            return _splice([source], target, options);
+            var operationMode = getOperationMode("value", "value", options);
+            return (operationMode===splice.operationModes.merge)?source:options.deletionToken;
         }
         else if (isObject(target)) {
             var operationMode = getOperationMode("value", "object", options);
@@ -105,18 +141,12 @@ function _splice(source, target, options) {
             var operationMode = getOperationMode("array", "array", options);
             var targetIndexMap = {};
             for (var i=0; i<target.length; i++) {
-                var id = target[i]?target[i][options.identityKey]:i;
-                if (!id) {
-                    id = i;
-                }
+                id = getArraySpliceIdentity(target[i], options, i);
                 targetIndexMap[id] = i;
             }
             var newElements = [];
             for (var i=0; i<source.length; i++) {
-                var id = source[i]?source[i][options.identityKey]:undefined;
-                if (!id) {
-                    id = options.append?(i+target.length):i;
-                }
+                var id = getArraySpliceIdentity(source[i], options, i+target.length);
                 if (id in targetIndexMap) {
                     var targetIndex = targetIndexMap[id];
                     target[targetIndex] = _splice(source[i], target[targetIndex], options);
@@ -207,7 +237,7 @@ function _splice(source, target, options) {
                 return filterEmptyObject(sourceClone, options);
             }
             else {
-                return target;
+                return options.deletionToken;
             }
         }
     }

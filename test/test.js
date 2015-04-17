@@ -52,7 +52,7 @@ describe("Basic tests,", function() {
             var a;
             var b = 2;
             var result = splice.merge(a).into(b);
-            result===undefined?done():done(new Error());
+            (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into 2, returning 1", function(done) {
             var a = 1;
@@ -91,18 +91,11 @@ describe("Basic tests,", function() {
         });
 
         // Target of merge is an array
-        it("should merge undefined into array, returning array", function(done) {
+        it("should merge undefined into array, returning undefined", function(done) {
             var a;
             var b = [1, 2];
             var result = splice.merge(a).into(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, b);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
+            (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into array, returning 1", function(done) {
             var a = 1;
@@ -123,7 +116,7 @@ describe("Basic tests,", function() {
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
-                assert.deepEqual(result, [1, 2, 3]);
+                assert.deepEqual(result, [1, 3, 3, 1, 2]);
                 done();
             }
             catch (e) {
@@ -228,7 +221,7 @@ describe("Basic tests,", function() {
         });
     });
 
-    describe("tests deep merging,", function() {
+    describe("tests complex merging,", function() {
 
         it("should merge array into undefined, returning array", function(done) {
             var a = [
@@ -319,7 +312,7 @@ describe("Basic tests,", function() {
 
 
         // Target of merge is an array
-        it("should merge undefined into array, returning array", function(done) {
+        it("should merge undefined into array, returning undefined", function(done) {
             var a;
             var b = [
                 {
@@ -332,14 +325,7 @@ describe("Basic tests,", function() {
                 }
             ];
             var result = splice.merge(a).into(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, b);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
+            (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into array, returning 1", function(done) {
             var a = 1;
@@ -588,91 +574,75 @@ describe("Basic tests,", function() {
         });
     });
 
-
-
-
-
-
-
-
-
-
-
     describe("tests simple removal,", function() {
 
         // Target of remove is undefined
-        it("should remove undefined from undefined, returning undefined", function(done) {
+        it("should remove undefined from undefined, returning deletion token", function(done) {
             var a;
             var b;
             var result = splice.remove(a).from(b);
             result===splice.defaultDeletionToken?done():done(new Error());
         });
-        it("should remove 1 from undefined, returning undefined", function(done) {
+        it("should remove 1 from undefined, returning deletion token", function(done) {
             var a = 1;
             var b;
             var result = splice.remove(a).from(b);
-            (result===null)?done():done(new Error());
+            result===splice.defaultDeletionToken?done():done(new Error());
         });
-        it("should remove array from undefined, returning undefined", function(done) {
+        it("should remove array from undefined, returning deletion token", function(done) {
             var a = [1, 2];
             var b;
             var result = splice.remove(a).from(b);
-            try {
-                assert.equal(result, undefined);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
+            result===splice.defaultDeletionToken?done():done(new Error());
         });
-        it("should remove object from undefined, returning undefined", function(done) {
+        it("should remove object from undefined, returning deletion token", function(done) {
             var a = {
                 p1:1,
                 p2:2
             };
             var b;
             var result = splice.remove(a).from(b);
-            try {
-                assert.equal(result, undefined);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
+            result===splice.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is a primitive
-        it("should remove undefined from 2, returning 2", function(done) {
+        it("should remove undefined from 2, returning deletion token", function(done) {
             var a;
             var b = 2;
             var result = splice.remove(a).from(b);
             result===splice.defaultDeletionToken?done():done(new Error());
         });
-        it("should remove 1 from 2, returning 2", function(done) {
+        it("should remove 1 from 2, returning deletion token", function(done) {
             var a = 1;
             var b = 2;
             var result = splice.remove(a).from(b);
             result===splice.defaultDeletionToken?done():done(new Error());
         });
-        it("should remove array from 2, returning 2", function(done) {
+        it("should remove array from 2, returning deletion token", function(done) {
             var a = [1, 2];
             var b = 2;
             var result = splice.remove(a).from(b);
             result===2?done():done(new Error());
         });
-        it("should remove object from 2, returning 2", function(done) {
+        it("should remove object from 2, returning deletion token", function(done) {
             var a = {
                 p1:1,
                 p2:2
             };
             var b = 2;
             var result = splice.remove(a).from(b);
-            result===2?done():done(new Error());
+            result===splice.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is an array
-        it("should remove undefined from array, returning array", function(done) {
+        it("should remove undefined from array, returning deletion token", function(done) {
             var a;
+            var b = [1, 2];
+            var result = splice.remove(a).from(b);
+            result===splice.defaultDeletionToken?done():done(new Error());
+        });
+        it("should remove [undefined] from array, returning array", function(done) {
+            var a = [undefined];
             var b = [1, 2];
             var result = splice.remove(a).from(b);
             try {
@@ -684,12 +654,32 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
-        it("should remove 1 from array, returning array", function(done) {
+        it("should remove 1 from array, returning deletion token", function(done) {
             var a = 1;
             var b = [1, 2];
             var result = splice.remove(a).from(b);
+            result===splice.defaultDeletionToken?done():done(new Error());
+        });
+        it("should remove [3] from array, returning array", function(done) {
+            var a = [3];
+            var b = [1, 2];
+            var result = splice.remove(a).from(b);
             try {
+                assert.strictEqual(result, b);
                 assert.deepEqual(result, b);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it("should remove [1] from array, returning modified array", function(done) {
+            var a = [1];
+            var b = [1, 2];
+            var result = splice.remove(a).from(b);
+            try {
+                assert.strictEqual(result, b);
+                assert.deepEqual(result, [2]);
                 done();
             }
             catch (e) {
@@ -710,21 +700,14 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
-        it("should remove object from array, returning array", function(done) {
+        it("should remove object from array, returning deletion token", function(done) {
             var a = {
                 p1:1,
                 p2:3
             };
             var b = [1, 2]
             var result = splice.remove(a).from(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, b);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
+            result===splice.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is an object
@@ -770,6 +753,36 @@ describe("Basic tests,", function() {
                 assert.deepEqual(result, {
                     p1:1
                 });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    describe("tests complex removal,", function() {
+        it("should remove [3] from array, returning array", function(done) {
+            var a = [1];
+            var b = [
+                {
+                    id:2,
+                    p1:1
+                },
+                {
+                    id:1,
+                    p1:1
+                }
+            ];
+            var result = splice.remove(a).from(b);
+            try {
+                assert.strictEqual(result, b);
+                assert.deepEqual(result, [
+                    {
+                        id:2,
+                        p1:1
+                    }
+                ]);
                 done();
             }
             catch (e) {
