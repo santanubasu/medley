@@ -95,7 +95,9 @@ function getArraySpliceIdentity(value, options, index) {
 function isEmptyObject(object) {
     var count = 0;
     for (var key in object) {
-        count++;
+        if (!key===marker.token) {
+            count++;
+        }
     }
     return count===0;
 }
@@ -170,7 +172,7 @@ function _splice(source, target, options) {
             var operationMode = getOperationMode("array", "array", options);
             var targetIndexMap = {};
             for (var i=0; i<target.length; i++) {
-                id = getArraySpliceIdentity(target[i], options, i);
+                var id = getArraySpliceIdentity(target[i], options, i);
                 targetIndexMap[id] = i;
             }
             var newElements = [];

@@ -1,8 +1,75 @@
 var assert = require("assert");
 var splice = require("../splice.js");
 
-describe("Basic tests,", function() {
-    describe("tests simple merging,", function() {
+describe("Tests merging,", function() {
+
+    describe("tests identity operations,", function() {
+        it("should merge array of simple values into itself, returning modified array", function (done) {
+            var a = [1, 2];
+            var result = splice.merge(a).into(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.deepEqual(result, a);
+                assert.deepEqual(result, [1, 2, 1, 2]);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it("should merge array of objects with identifiers into itself, returning array", function (done) {
+            var a = [
+                {
+                    id: 1,
+                    p1: 1
+                },
+                {
+                    id: 2,
+                    p1: 2
+                }
+            ];
+            var result = splice.merge(a).into(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.deepEqual(result, a);
+                assert.deepEqual(result, [
+                    {
+                        id: 1,
+                        p1: 1
+                    },
+                    {
+                        id: 2,
+                        p1: 2
+                    }
+                ]);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it("should merge object into itself, returning object", function (done) {
+            var a = {
+                p1: 1,
+                p2: 2
+            };
+            var result = splice.merge(a).into(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.deepEqual(result, a);
+                assert.deepEqual(result, {
+                    p1: 1,
+                    p2: 2
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    describe("tests shallow operations,", function() {
 
         // Target of merge is undefined
         it("should merge undefined into undefined, returning undefined", function(done) {
@@ -221,7 +288,7 @@ describe("Basic tests,", function() {
         });
     });
 
-    describe("tests complex merging,", function() {
+    describe("tests deep operations,", function() {
 
         it("should merge array into undefined, returning array", function(done) {
             var a = [
@@ -574,260 +641,34 @@ describe("Basic tests,", function() {
         });
     });
 
-    describe("tests simple removal,", function() {
-
-        // Target of remove is undefined
-        it("should remove undefined from undefined, returning deletion token", function(done) {
-            var a;
-            var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove 1 from undefined, returning deletion token", function(done) {
-            var a = 1;
-            var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove array from undefined, returning deletion token", function(done) {
-            var a = [1, 2];
-            var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove object from undefined, returning deletion token", function(done) {
-            var a = {
-                p1:1,
-                p2:2
-            };
-            var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-
-        // Target of remove is a primitive
-        it("should remove undefined from 2, returning deletion token", function(done) {
-            var a;
-            var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove 1 from 2, returning deletion token", function(done) {
-            var a = 1;
-            var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove array from 2, returning deletion token", function(done) {
-            var a = [1, 2];
-            var b = 2;
-            var result = splice.remove(a).from(b);
-            result===2?done():done(new Error());
-        });
-        it("should remove object from 2, returning deletion token", function(done) {
-            var a = {
-                p1:1,
-                p2:2
-            };
-            var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-
-        // Target of remove is an array
-        it("should remove undefined from array, returning deletion token", function(done) {
-            var a;
-            var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove [undefined] from array, returning array", function(done) {
-            var a = [undefined];
-            var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, b);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it("should remove 1 from array, returning deletion token", function(done) {
-            var a = 1;
-            var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove [3] from array, returning array", function(done) {
-            var a = [3];
-            var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, b);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it("should remove [1] from array, returning modified array", function(done) {
-            var a = [1];
-            var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, [2]);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it("should remove array from array, returning array", function(done) {
-            var a = [1, 2];
-            var b = [1, 3, 3];
-            var result = splice.remove(a).from(b);
-            try {
-                assert.notStrictEqual(result, a);
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, [3, 3]);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-        it("should remove object from array, returning deletion token", function(done) {
-            var a = {
-                p1:1,
-                p2:3
-            };
-            var b = [1, 2]
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-
-        // Target of remove is an object
-        it("should remove undefined from object, returning object", function(done) {
-            var a;
-            var b = {
-                p1:1,
-                p2:2
-            };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove 1 from object, returning object", function(done) {
-            var a = 1;
-            var b = {
-                p1:1,
-                p2:2
-            };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove array from object, returning object", function(done) {
-            var a = [1, 2];
-            var b = {
-                p1:1,
-                p2:2
-            };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
-        });
-        it("should remove object from object, returning object", function(done) {
-            var a = {
-                p2:3
-            };
-            var b = {
-                p1:1,
-                p2:2
-            };
-            var result = splice.remove(a).from(b);
-            try {
-                assert.notStrictEqual(result, a);
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, {
-                    p1:1
-                });
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    });
-
-    describe("tests complex removal,", function() {
-        it("should remove [3] from array, returning array", function(done) {
-            var a = [1];
-            var b = [
-                {
-                    id:2,
-                    p1:1
-                },
-                {
-                    id:1,
-                    p1:1
-                }
-            ];
-            var result = splice.remove(a).from(b);
-            try {
-                assert.strictEqual(result, b);
-                assert.deepEqual(result, [
-                    {
-                        id:2,
-                        p1:1
-                    }
-                ]);
-                done();
-            }
-            catch (e) {
-                done(e);
-            }
-        });
-    });
-
     describe("tests diamond patterns,", function() {
-        it("should remove edge from diamond, returning tree", function(done) {
+        it("should add edge to tree, returning diamond", function(done) {
             var a = {
-                p1:1
             }
             var b = {
-                p1:2
             }
             var c = {
-                p1:3
             }
             var d = {
-                p1:4
             }
             a.b = b;
             a.c = c;
             c.d = d;
-            b.d = d;
             var result = splice
-                .remove({
+                .merge({
                     b:{
-                        d:1
+                        d:d
                     }
                 })
-                .from(a);
+                .into(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, {
-                    p1:1,
                     b:{
-                        p1:2
+                        d:d
                     },
                     c:{
-                        p1:3,
-                        d:{
-                            p1:4
-                        }
+                        d:d
                     }
                 });
                 done();
@@ -839,7 +680,8 @@ describe("Basic tests,", function() {
     });
 
     describe("tests cyclic patterns,", function() {
-        it("should merge edge into root, returning simple direct cycle", function(done) {
+
+        it("should add parent reference to child, returning graph", function(done) {
             var a = {
                 p1:1,
                 b:{
@@ -856,7 +698,6 @@ describe("Basic tests,", function() {
                 .into(a);
             try {
                 assert.strictEqual(result, a);
-
                 assert.strictEqual(result.b, a.b);
                 assert.strictEqual(result.b.a, a);
                 assert.notStrictEqual(c.b.a, a);
@@ -874,27 +715,36 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
-        it("should remove edge from simple direct cycle, returning root", function(done) {
+
+        it("should add grandparent reference to grandchild, returning graph", function(done) {
             var a = {
-                p1:1,
                 b:{
-                    p1:2
+                    c:{}
                 }
             }
-            a.b.a = a;
+            var d = {
+                b:{
+                    c:{}
+                }
+            }
+            d.b.c.a = d;
+
             var result = splice
-                .remove({
-                    b:{
-                        a:1
-                    }
-                })
-                .from(a);
+                .merge(d)
+                .into(a);
             try {
                 assert.strictEqual(result, a);
+                assert.strictEqual(result.b, a.b);
+                assert.strictEqual(result.b.c, a.b.c);
+                assert.strictEqual(result.b.c.a, a);
+                assert.notStrictEqual(d.b.c.a, a);
+                assert.notStrictEqual(d.b.c, a.b.c);
+                assert.notStrictEqual(d.b, a.b);
                 assert.deepEqual(result, {
-                    p1:1,
                     b:{
-                        p1:2
+                        c:{
+                            a:a
+                        }
                     }
                 });
                 done();
@@ -903,6 +753,62 @@ describe("Basic tests,", function() {
                 done(e);
             }
         });
+
+        it("should add parent references to collection of children, returning graph", function(done) {
+            var a = {
+                b:[
+                    {
+                        id:1
+                    },
+                    {
+                        id:2
+                    }
+                ]
+            }
+            a.b[0].a = a;
+            var c = {
+                b:[
+                    {
+                        id:2
+                    },
+                    {
+                        id:3
+                    }
+                ]
+            }
+            c.b[0].a = c;
+            c.b[1].a = c;
+
+            var result = splice
+                .merge(c)
+                .into(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.strictEqual(result.b[0], a.b[0]);
+                assert.strictEqual(result.b[0].a, a);
+                assert.deepEqual(result, {
+                    b:[
+                        {
+                            id:1,
+                            a:a
+                        },
+                        {
+                            id:2,
+                            a:a
+                        },
+                        {
+                            id:3,
+                            a:a
+                        }
+                    ]
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+
     });
 
-})
+});
