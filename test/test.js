@@ -790,4 +790,119 @@ describe("Basic tests,", function() {
             }
         });
     });
+
+    describe("tests diamond patterns,", function() {
+        it("should remove edge from diamond, returning tree", function(done) {
+            var a = {
+                p1:1
+            }
+            var b = {
+                p1:2
+            }
+            var c = {
+                p1:3
+            }
+            var d = {
+                p1:4
+            }
+            a.b = b;
+            a.c = c;
+            c.d = d;
+            b.d = d;
+            var result = splice
+                .remove({
+                    b:{
+                        d:1
+                    }
+                })
+                .from(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.deepEqual(result, {
+                    p1:1,
+                    b:{
+                        p1:2
+                    },
+                    c:{
+                        p1:3,
+                        d:{
+                            p1:4
+                        }
+                    }
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    describe("tests cyclic patterns,", function() {
+        it("should merge edge into root, returning simple direct cycle", function(done) {
+            var a = {
+                p1:1,
+                b:{
+                    p1:2
+                }
+            }
+            var c = {
+                b:{}
+            }
+            c.b.a = c;
+
+            var result = splice
+                .merge(c)
+                .into(a);
+            try {
+                assert.strictEqual(result, a);
+
+                assert.strictEqual(result.b, a.b);
+                assert.strictEqual(result.b.a, a);
+                assert.notStrictEqual(c.b.a, a);
+                assert.notStrictEqual(c.b, a.b);
+                assert.deepEqual(result, {
+                    p1:1,
+                    b:{
+                        p1:2,
+                        a:a
+                    }
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it("should remove edge from simple direct cycle, returning root", function(done) {
+            var a = {
+                p1:1,
+                b:{
+                    p1:2
+                }
+            }
+            a.b.a = a;
+            var result = splice
+                .remove({
+                    b:{
+                        a:1
+                    }
+                })
+                .from(a);
+            try {
+                assert.strictEqual(result, a);
+                assert.deepEqual(result, {
+                    p1:1,
+                    b:{
+                        p1:2
+                    }
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
+
 })

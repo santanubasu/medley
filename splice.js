@@ -104,6 +104,35 @@ function filterEmptyObject(object, options) {
     return (options.deleteEmptyObjects&&isEmptyObject(object))?options.deletionToken:object;
 }
 
+var marker = (function() {
+    var token = "@target";
+    var markedObjects = [];
+    function reset() {
+        markedObjects.forEach(function(object) {
+            delete object[token]
+        });
+        markedObjects = [];
+    }
+    function mark(source, target) {
+        source[token] = target;
+        markedObjects.push(source);
+    }
+    function isMarked(object) {
+        return token in object;
+    }
+    function getMarkedTarget(source) {
+        return source[token];
+    }
+    reset();
+    return {
+        token:token,
+        reset:reset,
+        mark:mark,
+        isMarked:isMarked,
+        getMarkedTarget:getMarkedTarget
+    }
+})();
+
 function _splice(source, target, options) {
     if (isUndefined(source)) {
         if (isUndefined(target)) {
@@ -189,6 +218,10 @@ function _splice(source, target, options) {
         }
     }
     else if (isObject(source)) {
+        var markedTarget = marker.getMarkedTarget(source);
+        if (markedTarget) {
+            return markedTarget;
+        }
         if (isUndefined(target)) {
             var operationMode = getOperationMode("object", "value", options);
             if (operationMode==splice.operationModes.merge) {
@@ -212,12 +245,16 @@ function _splice(source, target, options) {
             }
         }
         else if (isObject(target)) {
+            marker.mark(source, target);
             var operationMode = getOperationMode("object", "object", options);
             if (operationMode===splice.operationModes.remove&&isIdentityObject(source, options)) {
                 return options.deletionToken;
             }
             else {
                 for (var key in source) {
+                    if (key===marker.token) {
+                        continue;
+                    }
                     if (key in target) {
                         target[key] = _splice(source[key], target[key], options);
                     }
@@ -304,6 +341,7 @@ var splice = function(options) {
                     args.forEach(function(source) {
                         retVal = _splice(source, target, options);
                     })
+                    marker.reset();
                     return retVal;
                 }
             }
@@ -329,6 +367,7 @@ var splice = function(options) {
                     args.forEach(function(source) {
                         retVal = _splice(source, target, options);
                     })
+                    marker.reset();
                     return retVal;
                 }
             }
