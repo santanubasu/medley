@@ -1,3 +1,5 @@
+var EventEmitter = require("eventemitter3");
+
 // Lifted from underscore
 var isArray = Array.isArray || function(obj) {
     return toString.call(obj) === '[object Array]';
@@ -88,6 +90,36 @@ function getArraySpliceIdentity(value, options, index) {
     }
     else {
         identity = index;
+    }
+    return identity;
+}
+
+function getIdentity(value, options) {
+    var identity;
+    var type = typeof value;
+    if (type==="undefined") {
+        return undefined;
+    }
+    if (options.identityKey) {
+        identity = value[options.identityKey];
+    }
+    if (identity) {
+        return identity;
+    }
+    else if (options.identityFn) {
+        identity = options.identityFn(value);
+    }
+    if (identity) {
+        return identity;
+    }
+    else if (type==="number"||type==="string"||type==="boolean") {
+        identity = value;
+    }
+    if (identity) {
+        return identity;
+    }
+    else {
+        identity = undefined;
     }
     return identity;
 }
@@ -247,12 +279,19 @@ function _splice(source, target, options) {
             }
         }
         else if (isObject(target)) {
-            marker.mark(source, target);
             var operationMode = getOperationMode("object", "object", options);
+            var targetId = getIdentity(target, options);
+            var sourceId = getIdentity(source, options);
             if (operationMode===splice.operationModes.remove&&isIdentityObject(source, options)) {
                 return options.deletionToken;
             }
+            else if (sourceId&&targetId&&targetId!=sourceId) {
+                var sourceClone = _splice(source, {}, options);
+                sourceClone = filterObject(sourceClone, options.deletionToken);
+                return filterEmptyObject(sourceClone, options);
+            }
             else {
+                marker.mark(source, target);
                 for (var key in source) {
                     if (key===marker.token) {
                         continue;
@@ -384,5 +423,5 @@ splice.operationModes = {
 splice.defaultDeletionToken = null;
 splice.merge = splice({}).merge;
 splice.remove = splice({}).remove;
-
+splice.ee = new EventEmitter();
 module.exports = splice;

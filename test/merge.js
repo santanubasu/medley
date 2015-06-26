@@ -570,12 +570,47 @@ describe("Tests merging,", function() {
             var result = splice.merge(a).into(b);
             try {
                 assert.strictEqual(result, b);
+                assert.strictEqual(result.o1, b.o1);
                 assert.deepEqual(result, {
                     p1:1,
                     p2:3,
                     o1:{
                         p1:1,
                         p2:2
+                    }
+                });
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+        it("should merge object into object, overwriting deep objects based on id, returning object", function(done) {
+            var a = {
+                p1:1,
+                p2:3,
+                o1:{
+                    id:1,
+                    p1:1
+                }
+            };
+            var b = {
+                p2:2,
+                o1:{
+                    id:2,
+                    p2:2
+                }
+            };
+            var result = splice.merge(a).into(b);
+            try {
+                assert.strictEqual(result, b);
+                assert.notStrictEqual(result.o1, a.o1);
+                assert.deepEqual(result, {
+                    p1:1,
+                    p2:3,
+                    o1:{
+                        id:1,
+                        p1:1
                     }
                 });
                 done();

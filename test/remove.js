@@ -44,13 +44,11 @@ describe("Tests removal,", function() {
                 p1: 1,
                 p2: 2
             };
-            var result = splice.merge(a).into(a);
+            var result = splice.remove(a).from(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
                 assert.deepEqual(result, {
-                    p1: 1,
-                    p2: 2
                 });
                 done();
             }
