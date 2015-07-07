@@ -296,12 +296,7 @@ function _splice(source, target, options) {
                     if (key===marker.token) {
                         continue;
                     }
-                    if (key in target) {
-                        target[key] = _splice(source[key], target[key], options);
-                    }
-                    else {
-                        target[key] = _splice(source[key], {}, options);
-                    }
+                    target[key] = _splice(source[key], target[key], options);
                 }
                 target = filterObject(target, options.deletionToken);
                 return filterEmptyObject(target, options);
