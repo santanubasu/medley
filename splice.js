@@ -127,7 +127,7 @@ function getIdentity(value, options) {
 function isEmptyObject(object) {
     var count = 0;
     for (var key in object) {
-        if (!key===marker.token) {
+        if (!(key===marker.token)) {
             count++;
         }
     }
