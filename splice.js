@@ -360,6 +360,7 @@ function _splice(source, target, options) {
 }
 
 var splice = function(options) {
+    options = options?options:{};
     return {
         merge:function() {
             var args = Array.prototype.slice.call(arguments);
