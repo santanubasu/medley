@@ -1,16 +1,11 @@
 {
-    "name": "splicejs",
-    "version": "0.0.1",
-    "private": true,
-    "main": "./splice",
-    "scripts": {
-    },
-    "dependencies": {
-      "mocha":"2.2.1",
-      "eventemitter3":"1.1.x"
-    },
-    "subdomain": "splicejs",
-    "engines": {
-        "node": "0.10.25"
-    }
+  "name": "medley",
+  "version": "0.0.1",
+  "repository":{
+    "type" : "git",
+    "url" : "git@github.com:santanubasu/medley.git"
+  },
+  "dependencies": {
+    "mocha":"2.2.1"
+  }
 }

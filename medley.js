@@ -419,5 +419,4 @@ splice.operationModes = {
 splice.defaultDeletionToken = null;
 splice.merge = splice({}).merge;
 splice.remove = splice({}).remove;
-splice.ee = new EventEmitter();
 module.exports = splice;

@@ -1,12 +1,12 @@
 var assert = require("assert");
-var splice = require("../splice.js");
+var medley = require("../medley.js");
 
 describe("Tests removal,", function() {
 
     describe("tests identity operations,", function() {
         it("should remove array of simple values from itself, returning empty array", function (done) {
             var a = [1, 2];
-            var result = splice.remove(a).from(a);
+            var result = medley.remove(a).from(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -28,7 +28,7 @@ describe("Tests removal,", function() {
                     p1: 2
                 }
             ];
-            var result = splice({deleteEmptyObjects:true}).remove(a).from(a);
+            var result = medley({deleteEmptyObjects:true}).remove(a).from(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -44,7 +44,7 @@ describe("Tests removal,", function() {
                 p1: 1,
                 p2: 2
             };
-            var result = splice.remove(a).from(a);
+            var result = medley.remove(a).from(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -64,20 +64,20 @@ describe("Tests removal,", function() {
         it("should remove undefined from undefined, returning deletion token", function(done) {
             var a;
             var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove 1 from undefined, returning deletion token", function(done) {
             var a = 1;
             var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove array from undefined, returning deletion token", function(done) {
             var a = [1, 2];
             var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove object from undefined, returning deletion token", function(done) {
             var a = {
@@ -85,27 +85,27 @@ describe("Tests removal,", function() {
                 p2:2
             };
             var b;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is a primitive
         it("should remove undefined from 2, returning deletion token", function(done) {
             var a;
             var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove 1 from 2, returning deletion token", function(done) {
             var a = 1;
             var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove array from 2, returning deletion token", function(done) {
             var a = [1, 2];
             var b = 2;
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             result===2?done():done(new Error());
         });
         it("should remove object from 2, returning deletion token", function(done) {
@@ -114,21 +114,21 @@ describe("Tests removal,", function() {
                 p2:2
             };
             var b = 2;
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is an array
         it("should remove undefined from array, returning deletion token", function(done) {
             var a;
             var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove [undefined] from array, returning array", function(done) {
             var a = [undefined];
             var b = [1, 2];
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, b);
@@ -141,13 +141,13 @@ describe("Tests removal,", function() {
         it("should remove 1 from array, returning deletion token", function(done) {
             var a = 1;
             var b = [1, 2];
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove [3] from array, returning array", function(done) {
             var a = [3];
             var b = [1, 2];
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, b);
@@ -160,7 +160,7 @@ describe("Tests removal,", function() {
         it("should remove [1] from array, returning modified array", function(done) {
             var a = [1];
             var b = [1, 2];
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, [2]);
@@ -173,7 +173,7 @@ describe("Tests removal,", function() {
         it("should remove array from array, returning array", function(done) {
             var a = [1, 2];
             var b = [1, 3, 3];
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
@@ -190,8 +190,8 @@ describe("Tests removal,", function() {
                 p2:3
             };
             var b = [1, 2]
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
 
         // Target of remove is an object
@@ -201,8 +201,8 @@ describe("Tests removal,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove 1 from object, returning object", function(done) {
             var a = 1;
@@ -210,8 +210,8 @@ describe("Tests removal,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove array from object, returning object", function(done) {
             var a = [1, 2];
@@ -219,8 +219,8 @@ describe("Tests removal,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.remove(a).from(b);
-            result===splice.defaultDeletionToken?done():done(new Error());
+            var result = medley.remove(a).from(b);
+            result===medley.defaultDeletionToken?done():done(new Error());
         });
         it("should remove object from object, returning object", function(done) {
             var a = {
@@ -230,7 +230,7 @@ describe("Tests removal,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
@@ -258,7 +258,7 @@ describe("Tests removal,", function() {
                     p1:1
                 }
             ];
-            var result = splice.remove(a).from(b);
+            var result = medley.remove(a).from(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, [
@@ -294,7 +294,7 @@ describe("Tests removal,", function() {
             a.c = c;
             c.d = d;
             b.d = d;
-            var result = splice
+            var result = medley
                 .remove({
                     b:{
                         d:1
@@ -333,7 +333,7 @@ describe("Tests removal,", function() {
                 }
             }
             a.b.a = a;
-            var result = splice
+            var result = medley
                 .remove({
                     b:{
                         a:1

@@ -1,12 +1,12 @@
 var assert = require("assert");
-var splice = require("../splice.js");
+var medley = require("../medley.js");
 
 describe("Tests merging,", function() {
 
     describe("tests identity operations,", function() {
         it("should merge array of simple values into itself, returning modified array", function (done) {
             var a = [1, 2];
-            var result = splice.merge(a).into(a);
+            var result = medley.merge(a).into(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -28,7 +28,7 @@ describe("Tests merging,", function() {
                     p1: 2
                 }
             ];
-            var result = splice.merge(a).into(a);
+            var result = medley.merge(a).into(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -53,7 +53,7 @@ describe("Tests merging,", function() {
                 p1: 1,
                 p2: 2
             };
-            var result = splice.merge(a).into(a);
+            var result = medley.merge(a).into(a);
             try {
                 assert.strictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -75,19 +75,19 @@ describe("Tests merging,", function() {
         it("should merge undefined into undefined, returning undefined", function(done) {
             var a;
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into undefined, returning 1", function(done) {
             var a = 1;
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             result===1?done():done(new Error());
         });
         it("should merge array into undefined, returning array", function(done) {
             var a = [1, 2];
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -103,7 +103,7 @@ describe("Tests merging,", function() {
                 p2:2
             };
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -118,19 +118,19 @@ describe("Tests merging,", function() {
         it("should merge undefined into 2, returning undefined", function(done) {
             var a;
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into 2, returning 1", function(done) {
             var a = 1;
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             result===1?done():done(new Error());
         });
         it("should merge array into 2, returning array", function(done) {
             var a = [1, 2];
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -146,7 +146,7 @@ describe("Tests merging,", function() {
                 p2:2
             };
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -161,13 +161,13 @@ describe("Tests merging,", function() {
         it("should merge undefined into array, returning undefined", function(done) {
             var a;
             var b = [1, 2];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into array, returning 1", function(done) {
             var a = 1;
             var b = [1, 2];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.deepEqual(result, a);
                 done();
@@ -179,7 +179,7 @@ describe("Tests merging,", function() {
         it("should merge array into array, returning array", function(done) {
             var a = [1, 2];
             var b = [1, 3, 3];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
@@ -193,7 +193,7 @@ describe("Tests merging,", function() {
         it("should append array into array, returning array", function(done) {
             var a = [1, 2];
             var b = [1, 3, 3];
-            var result = splice({append:true}).merge(a).into(b);
+            var result = medley({append:true}).merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
@@ -210,7 +210,7 @@ describe("Tests merging,", function() {
                 p2:3
             };
             var b = [1, 2]
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -228,7 +228,7 @@ describe("Tests merging,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into object, returning 1", function(done) {
@@ -237,7 +237,7 @@ describe("Tests merging,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.deepEqual(result, a);
                 done();
@@ -252,7 +252,7 @@ describe("Tests merging,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -271,7 +271,7 @@ describe("Tests merging,", function() {
                 p1:1,
                 p2:2
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.strictEqual(result, b);
@@ -302,7 +302,7 @@ describe("Tests merging,", function() {
                 }
             ];
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -322,7 +322,7 @@ describe("Tests merging,", function() {
                 }
             };
             var b;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -346,7 +346,7 @@ describe("Tests merging,", function() {
                 }
             ];
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -366,7 +366,7 @@ describe("Tests merging,", function() {
                 }
             };
             var b = 2;
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -391,7 +391,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             ];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into array, returning 1", function(done) {
@@ -406,7 +406,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             ];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.deepEqual(result, a);
                 done();
@@ -438,7 +438,7 @@ describe("Tests merging,", function() {
                     p2:4
                 }
             ];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, [
@@ -479,7 +479,7 @@ describe("Tests merging,", function() {
                     p2:4
                 }
             ];
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -501,7 +501,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             (result===void 0)?done():done(new Error());
         });
         it("should merge 1 into object, returning 1", function(done) {
@@ -514,7 +514,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.deepEqual(result, a);
                 done();
@@ -543,7 +543,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.notStrictEqual(result, a);
                 assert.deepEqual(result, a);
@@ -567,7 +567,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.strictEqual(result, b);
                 assert.strictEqual(result.o1, b.o1);
@@ -601,7 +601,7 @@ describe("Tests merging,", function() {
                     p2:2
                 }
             };
-            var result = splice.merge(a).into(b);
+            var result = medley.merge(a).into(b);
             try {
                 assert.strictEqual(result, b);
                 assert.notStrictEqual(result.o1, a.o1);
@@ -648,7 +648,7 @@ describe("Tests merging,", function() {
                     }
                 ]
             };
-            var result = splice({append:true}).merge(a).into(b);
+            var result = medley({append:true}).merge(a).into(b);
             try {
                 assert.strictEqual(result, b);
                 assert.deepEqual(result, {
@@ -689,7 +689,7 @@ describe("Tests merging,", function() {
             a.b = b;
             a.c = c;
             c.d = d;
-            var result = splice
+            var result = medley
                 .merge({
                     b:{
                         d:d
@@ -728,7 +728,7 @@ describe("Tests merging,", function() {
             }
             c.b.a = c;
 
-            var result = splice
+            var result = medley
                 .merge(c)
                 .into(a);
             try {
@@ -764,7 +764,7 @@ describe("Tests merging,", function() {
             }
             d.b.c.a = d;
 
-            var result = splice
+            var result = medley
                 .merge(d)
                 .into(a);
             try {
@@ -814,7 +814,7 @@ describe("Tests merging,", function() {
             c.b[0].a = c;
             c.b[1].a = c;
 
-            var result = splice
+            var result = medley
                 .merge(c)
                 .into(a);
             try {
@@ -846,4 +846,60 @@ describe("Tests merging,", function() {
 
     });
 
+    describe("tests production scenarios,", function() {
+
+        it("should merge deep structure into shallow empty structure with deleteEmptyObjects option to true, returning object", function(done) {
+            var a = {
+                p1:{
+                    p1:{
+                        p1:{
+                            p1:true
+                        }
+                    }
+                }
+            }
+            var b = {};
+
+            var result = medley({
+                deleteEmptyObjects:true
+            })
+                .merge(a)
+                .into(b);
+            try {
+                assert.strictEqual(result, b);
+                assert.deepEqual(result, a);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+
+        it("should merge deep structure into shallow empty structure with deleteEmptyObjects option to true, returning deletion token", function(done) {
+            var a = {
+                p1:{
+                    p1:{
+                        p1:{
+                            p1:{}
+                        }
+                    }
+                }
+            }
+            var b = {};
+
+            var result = medley({
+                deleteEmptyObjects:true
+            })
+                .merge(a)
+                .into(b);
+            try {
+                assert.notStrictEqual(result, b);
+                assert.deepEqual(result, medley.defaultDeletionToken);
+                done();
+            }
+            catch (e) {
+                done(e);
+            }
+        });
+    });
 });

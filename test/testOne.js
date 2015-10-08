@@ -1,5 +1,5 @@
 var assert = require("assert");
-var splice = require("../splice.js");
+var medley = require("../medley.js");
 
 /*
 describe("Test harness for debugging a single test,", function() {
@@ -15,7 +15,7 @@ describe("Test harness for debugging a single test,", function() {
                 p1: 2
             }
         ];
-        var result = splice({deleteEmptyObjects:true}).remove(a).from(a);
+        var result = medley({deleteEmptyObjects:true}).remove(a).from(a);
         try {
             assert.strictEqual(result, a);
             assert.deepEqual(result, a);

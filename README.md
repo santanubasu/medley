@@ -1,1 +1,1 @@
-# SpliceJS
+# Medley
