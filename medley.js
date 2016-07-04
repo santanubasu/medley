@@ -1,5 +1,3 @@
-var EventEmitter = require("eventemitter3");
-
 // Lifted from underscore
 var isArray = Array.isArray || function(obj) {
     return toString.call(obj) === '[object Array]';
